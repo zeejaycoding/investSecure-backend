@@ -13,7 +13,7 @@ router.post('/login', login);
 router.post('/forgot-password',forgotPassword);
 router.post('/reset-password',resetPassword);
 router.get('/profile', auth, profile);
-router.post('/updateProfile',auth,updateProfile);
+router.patch('/update-profile', auth, updateProfile);
 router.get('/home', auth, home); // Protected
 router.post('/deposit', auth, deposit); // Protected
 router.post('/withdraw', auth, withdraw); // Protected
