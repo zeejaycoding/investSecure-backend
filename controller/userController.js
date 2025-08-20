@@ -87,11 +87,34 @@ const updateProfile = expressHandler(async (req, res) => {
   res.json({ message: 'Profile updated' });
 });
 
+const home = expressHandler(async (req, res) => {
+  const user = await User.findById(req.userId).select('fullName'); // Add balance and investmentStartDate fields to model if needed
+  if (!user) return res.status(404).json({ message: 'User not found' });
+  res.json({
+    fullName: user.fullName,
+    balance: 1000.00, // Mock data, replace with actual field or calculation
+    investmentStartDate: 'Jan 15, 2025', // Mock data, replace with actual field
+  });
+});
+
+const deposit = expressHandler(async (req, res) => {
+  // Placeholder: Implement deposit logic (e.g., update balance)
+  res.json({ message: 'Deposit initiated' });
+});
+
+const withdraw = expressHandler(async (req, res) => {
+  // Placeholder: Implement withdraw logic (e.g., update balance, validate)
+  res.json({ message: 'Withdraw initiated' });
+});
+
 module.exports = {
   signup,
   login,
   forgotPassword,
   resetPassword,
   profile,
-  updateProfile
+  updateProfile,
+  home,
+  deposit,
+  withdraw,
 };
