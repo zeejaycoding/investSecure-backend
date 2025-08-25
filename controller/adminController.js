@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const expressHandler = require('express-async-handler');
 const crypto = require('crypto');
 const sendEmail = require('../utils/email');
+const User = require('../models/userModel');
 
 const signup = expressHandler(async (req, res) => {
   const { fullName, phoneNumber, email, password, acceptedTerms } = req.body;
@@ -71,4 +72,41 @@ const resetPassword = expressHandler(async (req, res) => {
   res.json({ message: 'Password reset successful' });
 });
 
-module.exports = { signup, login, forgotPassword, resetPassword };
+const getAllClients = expressHandler(async (req, res) => {
+  const clients = await User.find({}, 'fullName accountId tier status email');
+  res.json(clients.map(client => ({
+    name: client.fullName,
+    accountId: client.accountId,
+    tier: client.tier,
+    status: client.status,
+    statusColor: client.status === 'Active' ? '#00FF00' : '#FF0000', // Convert to hex for Flutter
+    email: client.email,
+    avatar: 'assets/images/avatar1.png', // Static for now, can be dynamic later
+  })));
+});
+
+const getClientDetails = expressHandler(async (req, res) => {
+  const { accountId } = req.params;
+  const client = await User.findOne({ accountId }, '-password -resetToken -resetTokenExpiry'); // Exclude sensitive data
+  if (!client) return res.status(404).json({ message: 'Client not found' });
+  res.json({
+    name: client.fullName,
+    email: client.email,
+    accountId: client.accountId,
+    tier: client.tier,
+    status: client.status,
+    balance: client.balance,
+    transactions: [], // Placeholder, implement transaction model later
+  });
+});
+
+const getDashboardStats = expressHandler(async (req, res) => {
+  const activeClients = await User.countDocuments({ status: 'Active' });
+  const totalInvestments = await User.aggregate([{ $group: { _id: null, total: { $sum: '$balance' } } }]);
+  res.json({
+    totalActiveClients: activeClients.toString(),
+    totalInvestments: totalInvestments[0]?.total.toString() || '0',
+  });
+});
+
+module.exports = { signup, login, forgotPassword, resetPassword, getAllClients,getClientDetails,getDashboardStats };
