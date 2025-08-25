@@ -107,6 +107,27 @@ const withdraw = expressHandler(async (req, res) => {
   res.json({ message: 'Withdraw initiated' });
 });
 
+const addBeneficiary = expressHandler(async (req, res) => {
+  const { fullName, relationship, phoneNumber, nationalId } = req.body;
+  if (!fullName || !relationship || !phoneNumber || !nationalId) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  const user = await User.findById(req.userId);
+  if (!user) return res.status(404).json({ message: 'User not found' });
+
+  user.beneficiaries.push({ fullName, relationship, phoneNumber, nationalId });
+  await user.save();
+  res.json({ message: 'Beneficiary added successfully' });
+});
+
+const getBeneficiary = expressHandler(async (req, res) => {
+  const user = await User.findById(req.userId).select('beneficiaries');
+  if (!user) return res.status(404).json({ message: 'User not found' });
+  res.json(user.beneficiaries || []);
+});
+
+
 module.exports = {
   signup,
   login,
@@ -117,4 +138,6 @@ module.exports = {
   home,
   deposit,
   withdraw,
+  addBeneficiary,
+  getBeneficiary,
 };

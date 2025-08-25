@@ -14,8 +14,10 @@ router.post('/forgot-password',forgotPassword);
 router.post('/reset-password',resetPassword);
 router.get('/profile', auth, profile);
 router.patch('/update-profile', auth, updateProfile);
-router.get('/home', auth, home); // Protected
-router.post('/deposit', auth, deposit); // Protected
-router.post('/withdraw', auth, withdraw); // Protected
+router.get('/home', auth, home); 
+router.post('/deposit', auth, deposit); 
+router.post('/withdraw', auth, withdraw); 
+router.post('/beneficiary', auth, addBeneficiary); 
+router.get('/beneficiary', auth, getBeneficiary); 
 
 module.exports = router;
