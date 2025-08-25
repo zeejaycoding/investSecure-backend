@@ -1,9 +1,7 @@
 const express=require('express');
 const {signup,login, profile, forgotPassword, resetPassword,
-  updateProfile,
-  home,
-  deposit,
-  withdraw}=require('../controller/userController');
+  updateProfile,home,deposit,withdraw, addBeneficiary,
+  getBeneficiary,}=require('../controller/userController');
 const auth=require('../middleware/auth');
 
 const router=express.Router();
