@@ -4,7 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-
+const crypto=require('crypto');
 dotenv.config();
 const app = express();
 
@@ -17,6 +17,9 @@ mongoose.connect(process.env.MONGO_URI, {
 })
   .then(() => console.log('MongoDB Connected successfully'))
   .catch(err => console.error('MongoDB Connection Error:', err.message));
+
+  console.log("CRYPTO__???");
+  console.log(crypto.randomBytes(3).toString('hex'));
 
 // Routes
 app.use('/users', userRoutes);
