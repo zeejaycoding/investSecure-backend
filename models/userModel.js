@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto');
+
 
 const beneficiarySchema = new mongoose.Schema({
   fullName: { type: String, required: true },
